@@ -14,7 +14,13 @@ class LLMAgent:
         search_tool = DuckDuckGoSearchTool()
         model = OpenAIServerModel(api_base=conf['api_base'], model_id=conf['model_id'], api_key=conf['openai_key'])
         self.agent = CodeAgent(tools=[search_tool] + music_tools, model=model, additional_authorized_imports=['*'])
+        
+    def update_memory(self):
+        n_msg = len(self.agent.memory.steps)
+        if n_msg > 10:
+            self.agent.memory.steps = self.agent.memory.steps[n_msg-10 : -1]
 
     def invoke(self, user_input: str):
-        answer = self.agent.run(user_input)
+        self.update_memory()
+        answer = self.agent.run(user_input, reset=False)
         return answer
