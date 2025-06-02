@@ -22,5 +22,5 @@ class LLMAgent:
 
     def invoke(self, user_input: str):
         self.update_memory()
-        answer = self.agent.run(user_input, reset=False)
+        answer = self.agent.run(user_input + ' Отвечай на русском языке всегда!!!', reset=False)
         return answer
